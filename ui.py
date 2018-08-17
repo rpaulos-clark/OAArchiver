@@ -3,6 +3,9 @@ from tkinter import ttk
 
 """ 
     Resizing when an outcomesCanvas is removed/grid-ed is ANNOYING!
+    
+    Sizing issue where the checkboxes and text were off screen to the left appears to be because the canvas or frame 
+    defaults to showing the view at the right-most point.
 """
 
 
@@ -169,7 +172,7 @@ class OutcomesCanvas(object):
         frame = ttk.Frame(canvas)
         canvas.create_window((20, 20), window=frame)  # Hang the frame
         frame.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas))  # accommodate new widgets
-        canvas.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas)) ## Test
+        #canvas.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas)) ## Test. This is likely unnecessary, was trying to figure out why the text was off.
 
         self.canvas = canvas
         self.frame = frame
@@ -188,6 +191,7 @@ class OutcomesCanvas(object):
         self.canvas.grid()
         self.vBar.grid()
         self.hBar.grid()
+        self.canvas.xview("moveto", 0.0)  # SALVATION!! Focuses the canvas all the way to the left side
 
     def turnOff(self):
         self.canvas.grid_remove()
