@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9c0e0c8d-1598-46fe-aec8-74d4e42bfd5e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RetrieveProgramData.py" afterPath="$PROJECT_DIR$/RetrieveProgramData.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui.py" afterPath="$PROJECT_DIR$/ui.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,11 +16,23 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file leaf-file-name="canvasTesting.py" pinned="false" current-in-tab="true">
+            <file leaf-file-name="canvasTesting.py" pinned="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/canvasTesting.py">
                 <provider selected="true" editor-type-id="text-editor">
                   <state relative-caret-position="684">
                     <caret line="41" column="20" lean-forward="false" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
+                    <folding>
+                      <element signature="e#0#21#0" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="windows.py" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/windows.py">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="270">
+                    <caret line="70" column="8" lean-forward="false" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
                     <folding>
                       <element signature="e#0#21#0" expanded="true" />
                     </folding>
@@ -40,8 +51,8 @@
             <file leaf-file-name="playing.py" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/playing.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="-1530">
-                    <caret line="20" column="16" lean-forward="false" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="16" />
+                  <state relative-caret-position="306">
+                    <caret line="122" column="0" lean-forward="true" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
                     <folding>
                       <element signature="e#0#21#0" expanded="true" />
                       <marker date="1534522331850" expanded="true" signature="440:682" ph="..." />
@@ -93,23 +104,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="windows.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/windows.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="738">
-              <caret line="89" column="52" lean-forward="false" selection-start-line="89" selection-start-column="52" selection-end-line="89" selection-end-column="52" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ui.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="584">
-              <caret line="125" column="29" lean-forward="false" selection-start-line="125" selection-start-column="29" selection-end-line="125" selection-end-column="29" />
+            <state relative-caret-position="458">
+              <caret line="167" column="12" lean-forward="false" selection-start-line="167" selection-start-column="12" selection-end-line="167" selection-end-column="12" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -578,29 +577,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/playing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1530">
-          <caret line="20" column="16" lean-forward="false" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <marker date="1534522331850" expanded="true" signature="440:682" ph="..." />
-            <marker date="1534522331850" expanded="true" signature="800:1100" ph="..." />
-            <marker date="1534522331850" expanded="true" signature="1368:1369" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/windows.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="738">
-          <caret line="89" column="52" lean-forward="false" selection-start-line="89" selection-start-column="52" selection-end-line="89" selection-end-column="52" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/RetrieveProgramData.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -621,10 +597,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/playing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="122" column="0" lean-forward="true" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <marker date="1534522331850" expanded="true" signature="440:682" ph="..." />
+            <marker date="1534522331850" expanded="true" signature="800:1100" ph="..." />
+            <marker date="1534522331850" expanded="true" signature="1368:1369" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/windows.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="70" column="8" lean-forward="false" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="584">
-          <caret line="125" column="29" lean-forward="false" selection-start-line="125" selection-start-column="29" selection-end-line="125" selection-end-column="29" />
+        <state relative-caret-position="458">
+          <caret line="167" column="12" lean-forward="false" selection-start-line="167" selection-start-column="12" selection-end-line="167" selection-end-column="12" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>

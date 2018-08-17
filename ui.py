@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 """ 
-    Solid as-is. Will now need to investigate creating outcomes canvas->frame->outcome checkboxes and toggling them
+    Resizing when an outcomesCanvas is removed/grid-ed is ANNOYING!
 """
 
 
@@ -112,12 +112,12 @@ class ProgramBox(object):
 
         i = self.programBox.curselection()[0]
 
-        if self.activeCanvas is None: #  Account for blank canvas
+        if self.activeCanvas is None:  # Account for blank canvas
             self.activeCanvas = self.outcomeCanvases[i]
             self.activeCanvas.turnOn()
             return
 
-        if self.activeCanvas is not self.outcomeCanvases[i]: # Swap out active canvases
+        if self.activeCanvas is not self.outcomeCanvases[i]:  # Swap out active canvases
             self.activeCanvas.turnOff()
             self.activeCanvas = self.outcomeCanvases[i]
             self.activeCanvas.turnOn()
@@ -162,10 +162,14 @@ class OutcomesCanvas(object):
         self.frame = frame
         self.vBar = vBar
 
+    def populateFrame(self):
+        #  Here we will populate the canvas' frame with OutcomeButtons
+        for outcome in self.outcomes:
+             
+
     def turnOn(self):
         self.canvas.grid()
         self.vBar.grid()
-
 
     def turnOff(self):
         self.canvas.grid_remove()
@@ -175,5 +179,18 @@ class OutcomesCanvas(object):
 # Accepts an outcome object to populate the UI portion and for communicating the toggle states
 class OutcomeButton(object):
 
-    def __init__(self, outcome):
+    def __init__(self, master, outcome, row):
+        self.master = master
         self.outcome = outcome
+        self.row = row
+        self.button = None  # Instantiated in buildSelf
+
+    def buildSelf(self):
+        button = Checkbutton(self.master, text=self.outcome.outcomeDescription, command=self.toggleAssessed)
+
+
+    def toggleAssessed(self):
+        if self.outcome.assessed:
+            self.outcome.assessed = False
+        else:
+            self.outcome.assessed = True
