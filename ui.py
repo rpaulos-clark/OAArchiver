@@ -18,6 +18,8 @@ class UI(object):
         self.programBoxes = []
         self.buildProgramLBoxes()
 
+        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_rowconfigure(0, weight=1)
         self.root.mainloop()
 
     def buildMasterBox(self):
@@ -144,12 +146,12 @@ class OutcomesCanvas(object):
 
     def buildSelf(self):
         # Construct master canvas
-        canvas = Canvas(self.root, width=600)
-        canvas.grid(column=2, row=0)
+        canvas = Canvas(self.root, width=600, height=600)
+        canvas.grid(column=2, row=0, padx=20)
         canvas.grid_remove()
-        canvas.configure(scrollregion=(0, 0, 1000, 1000))  # Not sure what I want to do with this. Come back -- 8/17/2018
+        #canvas.configure(scrollregion=(0, 0, 1000, 1000))  # Not sure what I want to do with this. Come back -- 8/17/2018
 
-        # Add scrollbar
+        # Add vertical scrollbar
         vBar = ttk.Scrollbar(self.root, orient=VERTICAL, command=canvas.yview)
         vBar.grid(column=3, row=0, sticky=(N, S))  # maybe take out sticky
         canvas.configure(yscrollcommand=vBar.set)
@@ -157,8 +159,9 @@ class OutcomesCanvas(object):
 
         # Add frame
         frame = ttk.Frame(canvas)
-        canvas.create_window((4, 4), window=frame)  # Hang the frame
+        canvas.create_window((20, 20), window=frame)  # Hang the frame
         frame.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas))  # accommodate new widgets
+        canvas.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas)) ## Test
 
         self.canvas = canvas
         self.frame = frame
@@ -196,7 +199,7 @@ class OutcomeButton(object):
 
     def buildSelf(self):
         button = Checkbutton(self.master, text=self.outcome.outcomeDescription, command=self.toggleAssessed)
-        button.grid(column=3, row=self.row)
+        button.grid(column=3, row=self.row, sticky=W)
 
     def toggleAssessed(self):
         if self.outcome.assessed:
