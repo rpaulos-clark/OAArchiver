@@ -110,26 +110,33 @@ class Program(object):
 
         :param programEntries: A list of all query entries corresponding to ONE program (i.e. all program outcomes)
         """
-        self.programEntries = programEntries
+        self.programEntries = programEntries # All query rows corresponding to this particular program
         self.educationalProgramID = programEntries[0][1] # EPC
         self.FullTitle = programEntries[0][3]
-        self.programOutcomes = {} # becomes a dict of outcomeID:Descriptions.
+        self.programOutcomes = []
         self.buildOutcomes()
 
     def buildOutcomes(self):
 
         # outcomeID:outcome text
-        self.programOutcomes = {entry[4]: entry[5] for entry in self.programEntries}
+        # self.programOutcomes = {entry[4]: entry[5] for entry in self.programEntries}
 
-    # Just messing around
-    def printOutcomes(self):
+        self.programOutcomes = [Outcome(entry[4], entry[5]) for entry in self.programEntries]
 
-        for keys, values in self.programOutcomes.items():
-            print(keys, values)
+    def assessedOutcomes(self):
+        # Not yet tested
+        assessed = [outcome for outcome in self.programOutcomes if outcome.assessed]
+        return {self.educationalProgramID: assessed}
 
     # just messing around
     def __str__(self):
         return self.FullTitle
 
 
+class Outcome(object):
+
+    def __init__(self, outcomeID, outcomeDescription):
+        self.outcomeID = outcomeID
+        self.outcomeDescription = outcomeDescription
+        self.assessed = False # To be toggled by the checkbox UI
 
