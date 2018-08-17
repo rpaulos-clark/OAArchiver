@@ -141,6 +141,7 @@ class OutcomesCanvas(object):
         self.canvas = None  # Updated in buildself
         self.frame = None  # updated in buildSelf
         self.vBar = None  # updated in buildSelf
+        self.hBar = None  # updated in buildself
         self.buildSelf()
         self.populateFrame()
 
@@ -157,6 +158,13 @@ class OutcomesCanvas(object):
         canvas.configure(yscrollcommand=vBar.set)
         vBar.grid_remove()
 
+        # Add horizontal scrollbar
+        hBar = ttk.Scrollbar(self.root, orient=HORIZONTAL, command=canvas.xview)
+        hBar.grid(column=2, row=1, sticky=(W, E))
+        canvas.configure(xscrollcommand=hBar.set)
+        hBar.grid_remove()
+
+
         # Add frame
         frame = ttk.Frame(canvas)
         canvas.create_window((20, 20), window=frame)  # Hang the frame
@@ -166,6 +174,7 @@ class OutcomesCanvas(object):
         self.canvas = canvas
         self.frame = frame
         self.vBar = vBar
+        self.hBar = hBar
 
     def populateFrame(self):
         #  Here we will populate the canvas' frame with OutcomeButtons
@@ -178,10 +187,12 @@ class OutcomesCanvas(object):
     def turnOn(self):
         self.canvas.grid()
         self.vBar.grid()
+        self.hBar.grid()
 
     def turnOff(self):
         self.canvas.grid_remove()
         self.vBar.grid_remove()
+        self.hBar.grid_remove()
 
     def onFrameConfigure(self, canvas):
         canvas.configure(scrollregion=canvas.bbox("all"))
