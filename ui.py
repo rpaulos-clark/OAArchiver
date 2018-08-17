@@ -15,14 +15,19 @@ class UI(object):
 
         self.activeSecondary = None # We are electing to always have the first one active. Will be a box
         self.masterBox = None # instantated in buildMasterBox
+        self.submitButton = None  #instantiated in buildSubmitButton
         self.programGroupData = programGroupData
         self.root = Tk()
         self.buildMasterBox()
         self.programBoxes = []
         self.buildProgramLBoxes()
+        self.buildSubmitButton()
 
-        self.root.grid_columnconfigure(0, weight=1)
-        self.root.grid_rowconfigure(0, weight=1)
+        #self.root.grid_columnconfigure(0, weight=1)
+        #self.root.grid_rowconfigure(0, weight=1)
+        self.root.state('zoomed') # makes fullscreen
+        #self.root.attributes("-fullscreen", True)
+
         self.root.mainloop()
 
     def buildMasterBox(self):
@@ -49,6 +54,11 @@ class UI(object):
 
         return
 
+    def buildSubmitButton(self):
+        button = Button(self.root, text='Submit Report', command=self.assessedCensus)
+        button.grid(row=1, column=0)
+        self.submitButton = button
+
     def toggleBoxes(self, *args):
         """
             Control logic for displaying the program box
@@ -70,7 +80,9 @@ class UI(object):
             Call upon each ProgramBox to provide a list and join them together
         :return:
         """
-
+        finalRaw = [progGroup.assessedOutcomes() for progGroup in self.programGroupData]
+        final = [outcome for outcome in finalRaw if outcome is not None]
+        print(final)
 
 class ProgramBox(object):
 
@@ -210,11 +222,14 @@ class OutcomeButton(object):
         self.outcome = outcome
         self.row = row
         self.button = None  # Instantiated in buildSelf
+        self.var = IntVar()  # Attempting to debug overlapping/duplicate checked boxes. Fixed, probably not cuz of this, but I'm leaving it. ALthough maybe it doens't internally track state and did need this...
         self.buildSelf()
 
     def buildSelf(self):
-        button = Checkbutton(self.master, text=self.outcome.outcomeDescription, command=self.toggleAssessed)
+        button = Checkbutton(
+            self.master, text=self.outcome.outcomeDescription, command=self.toggleAssessed, variable=self.var)
         button.grid(column=3, row=self.row, sticky=W)
+        self.button = button
 
     def toggleAssessed(self):
         if self.outcome.assessed:

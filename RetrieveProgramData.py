@@ -92,6 +92,12 @@ class ProgramGroup(object):
             if programEntries:
                 self.programs.append(Program(programEntries))
 
+    def assessedOutcomes(self):
+        assessedRaw = [program.assessedOutcomes() for program in self.programs]
+        assessed = [outcome for outcome in assessedRaw if outcome is not None]
+        if assessed:
+            return assessed
+
     def listPrograms(self):
 
         return [program for program in self.programs]
@@ -125,8 +131,10 @@ class Program(object):
 
     def assessedOutcomes(self):
         # Not yet tested
-        assessed = [outcome for outcome in self.programOutcomes if outcome.assessed]
-        return {self.educationalProgramID: assessed}
+        assessedRaw = [outcome.outcomeID for outcome in self.programOutcomes if outcome.assessed]  # All results
+        assessed = [outcome for outcome in assessedRaw if outcome is not None]  # Filter the None values
+        if assessed:
+            return {self.educationalProgramID: assessed}
 
     # just messing around
     def __str__(self):
