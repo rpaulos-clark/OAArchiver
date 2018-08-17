@@ -140,10 +140,11 @@ class OutcomesCanvas(object):
         self.frame = None  # updated in buildSelf
         self.vBar = None  # updated in buildSelf
         self.buildSelf()
+        self.populateFrame()
 
     def buildSelf(self):
         # Construct master canvas
-        canvas = Canvas(self.root)
+        canvas = Canvas(self.root, width=600)
         canvas.grid(column=2, row=0)
         canvas.grid_remove()
         canvas.configure(scrollregion=(0, 0, 1000, 1000))  # Not sure what I want to do with this. Come back -- 8/17/2018
@@ -155,8 +156,9 @@ class OutcomesCanvas(object):
         vBar.grid_remove()
 
         # Add frame
-        frame = Frame(canvas)
+        frame = ttk.Frame(canvas)
         canvas.create_window((4, 4), window=frame)  # Hang the frame
+        frame.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas))  # accommodate new widgets
 
         self.canvas = canvas
         self.frame = frame
@@ -164,8 +166,11 @@ class OutcomesCanvas(object):
 
     def populateFrame(self):
         #  Here we will populate the canvas' frame with OutcomeButtons
+
+        i = 0
         for outcome in self.outcomes:
-             
+            OutcomeButton(self.frame, outcome, i)
+            i += 1
 
     def turnOn(self):
         self.canvas.grid()
@@ -174,6 +179,9 @@ class OutcomesCanvas(object):
     def turnOff(self):
         self.canvas.grid_remove()
         self.vBar.grid_remove()
+
+    def onFrameConfigure(self, canvas):
+        canvas.configure(scrollregion=canvas.bbox("all"))
 
 
 # Accepts an outcome object to populate the UI portion and for communicating the toggle states
@@ -184,10 +192,11 @@ class OutcomeButton(object):
         self.outcome = outcome
         self.row = row
         self.button = None  # Instantiated in buildSelf
+        self.buildSelf()
 
     def buildSelf(self):
         button = Checkbutton(self.master, text=self.outcome.outcomeDescription, command=self.toggleAssessed)
-
+        button.grid(column=3, row=self.row)
 
     def toggleAssessed(self):
         if self.outcome.assessed:
