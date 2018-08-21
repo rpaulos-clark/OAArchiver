@@ -1,6 +1,8 @@
 from tkinter import *
+from tkinter import filedialog
 from tkinter import ttk
-
+from tkinter import messagebox
+from archiveWriter import ArchiveWriter
 """ 
     Resizing when an outcomesCanvas is removed/grid-ed is ANNOYING!
     
@@ -16,12 +18,16 @@ class UI(object):
         self.activeSecondary = None # We are electing to always have the first one active. Will be a box
         self.masterBox = None # instantated in buildMasterBox
         self.submitButton = None  #instantiated in buildSubmitButton
+        self.fileButton = None  # instantiated in buildSelectFileButton
+        self.filePath = None  # to be selected by the user
         self.programGroupData = programGroupData
         self.root = Tk()
         self.buildMasterBox()
         self.programBoxes = []
         self.buildProgramLBoxes()
         self.buildSubmitButton()
+        self.buildSelectFileButton()
+
 
         #self.root.grid_columnconfigure(0, weight=1)
         #self.root.grid_rowconfigure(0, weight=1)
@@ -55,9 +61,15 @@ class UI(object):
         return
 
     def buildSubmitButton(self):
-        button = Button(self.root, text='Submit Report', command=self.assessedCensus)
+
+        button = Button(self.root, text='Submit Report', command=self.submit)
         button.grid(row=1, column=0)
         self.submitButton = button
+
+    def buildSelectFileButton(self):
+        button = Button(self.root, text='Select File to Save', command=self.selectFile)
+        button.grid(row=1, column=1)
+        self.fileButton = button
 
     def toggleBoxes(self, *args):
         """
@@ -74,15 +86,55 @@ class UI(object):
         else:
             pass
 
+    def submit(self):
+        """
+            This method should gather the assessment data and verify that a filepath has been chosen before attempting
+            the write to the database.
+            :return:
+        """
+        if self.filePath is None:
+            messagebox.showinfo(message="You must select a file to submit", icon='error')
+            return
+
+        assessmentData = self.assessedCensus()
+        if not assessmentData:
+            messagebox.showinfo(message="You must select at least one assessed program outcome")
+            return
+
+        # Pass data to archiveWriter(filePath, assessmentData)
+        try:
+            ArchiveWriter(self.filePath, assessmentData)
+        except AssertionError:
+            pass
+            #Dialog box informing user of the problem.
+        except Exception as e:
+            pass
+            # Dialog box - this should mean there was a problem commiting data to the database
+
+
+        print("Submitting report!")
+
     def assessedCensus(self):
         """
             This method will be responsible for querying the programs for assessment information
             Call upon each ProgramBox to provide a list and join them together
-        :return:
+        :return: A list of dictionaries: {EducationalProgramID: ProgramOutcomeID}
         """
         finalRaw = [progGroup.assessedOutcomes() for progGroup in self.programGroupData]
         final = [outcome for outcome in finalRaw if outcome is not None]
-        print(final)
+        return final
+
+    # Receives filepath and ensures valid document type
+    def selectFile(self):
+        tempPath  = filedialog.askopenfilename()
+        if tempPath == '':  # User pressed cancel
+            return
+        if tempPath[-4:] != '.pdf':
+            messagebox.showinfo(message="Invalid file format; file must be PDF format", icon='error')
+        else:
+            self.filePath = tempPath
+        return
+
 
 class ProgramBox(object):
 

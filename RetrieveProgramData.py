@@ -93,8 +93,12 @@ class ProgramGroup(object):
                 self.programs.append(Program(programEntries))
 
     def assessedOutcomes(self):
+        """
+
+        :return: A list of dictionaries where each key is the programID and the entries are lists of outcomeIDs
+        """
         assessedRaw = [program.assessedOutcomes() for program in self.programs]
-        assessed = [outcome for outcome in assessedRaw if outcome is not None]
+        assessed = [program for program in assessedRaw if program is not None]
         if assessed:
             return assessed
 
@@ -130,7 +134,6 @@ class Program(object):
         self.programOutcomes = [Outcome(entry[4], entry[5]) for entry in self.programEntries]
 
     def assessedOutcomes(self):
-        # Not yet tested
         assessedRaw = [outcome.outcomeID for outcome in self.programOutcomes if outcome.assessed]  # All results
         assessed = [outcome for outcome in assessedRaw if outcome is not None]  # Filter the None values
         if assessed:
