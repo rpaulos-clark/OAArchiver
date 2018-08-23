@@ -124,13 +124,8 @@ class Program(object):
 
     def buildOutcomes(self):
 
-        # outcomeID:outcome text
-        # self.programOutcomes = {entry[4]: entry[5] for entry in self.programEntries}
-
         self.programOutcomes = [Outcome(entry[4], entry[5]) for entry in self.programEntries]
         self.programOutcomes.sort(key=lambda x: x.outcomeDescription)
-
-
 
     def assessedOutcomes(self):
         assessedRaw = [outcome.outcomeID for outcome in self.programOutcomes if outcome.assessed]  # All results

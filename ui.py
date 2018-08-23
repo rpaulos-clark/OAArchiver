@@ -86,18 +86,16 @@ class UI(object):
             messagebox.showinfo(message="You must select at least one assessed program outcome")
             return
 
-        # Pass data to archiveWriter(filePath, assessmentData)
         try:
             ArchiveWriter(self.filePath, assessmentData)
         except AssertionError:
-            pass
-            #Dialog box informing user of the problem.
+            messagebox.showinfo(message="Error parsing file name. Try again with a different file name")
+
         except Exception as e:
-            pass
-            # Dialog box - this should mean there was a problem commiting data to the database
+            messagebox.showinfo(message="Encountered {}\n Please exit the program and try again".format(e))
 
-
-        print("Submitting report!")
+        # If we make it here we need to create a dialog box confirming submission and then reset program state
+        messagebox.showinfo(message="Submission Successful!")
 
     def assessedCensus(self):
         """
