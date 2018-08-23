@@ -166,7 +166,7 @@ class ProgramBox(object):
         """
 
         boxValues = [program.FullTitle for program in self.programs]
-        boxValues.sort()
+        #boxValues.sort()  # Believe this to be the cause of Program/Program Canvas mismatches
         boxValues = StringVar(value=boxValues)
         box = Listbox(self.root, listvariable=boxValues, height=self.height, width=self.width)
         box.bind("<Double-1>", self.toggleCanvases)
@@ -218,7 +218,6 @@ class OutcomesCanvas(object):
         canvas = Canvas(self.root, width=600, height=600)
         canvas.grid(column=2, row=0, padx=20)
         canvas.grid_remove()
-        #canvas.configure(scrollregion=(0, 0, 1000, 1000))  # Not sure what I want to do with this. Come back -- 8/17/2018
 
         # Add vertical scrollbar
         vBar = ttk.Scrollbar(self.root, orient=VERTICAL, command=canvas.yview)
