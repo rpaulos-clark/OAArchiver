@@ -9,7 +9,8 @@ import ui
     Nope. However, the correct programID is submitted, so this is likely a UI issue
     
     
-    Looks solved. Sorting must concluded before creation of subordinate objects.
+    Looks solved. Sorting must concluded before creation of subordinate objects since we have th UI and corresponding
+    objects existing in parallel. don't do that next time..
 """
 
 """ Should the user be allowed to pick a year/quarter assessed? Probably, otherwise we rely upon timely filing LOL
