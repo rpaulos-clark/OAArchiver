@@ -100,7 +100,6 @@ class ProgramGroup(object):
             return assessed
 
     def listPrograms(self):
-
         return [program for program in self.programs]
 
     # Just messing around

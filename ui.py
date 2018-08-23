@@ -3,12 +3,6 @@ from tkinter import filedialog
 from tkinter import ttk
 from tkinter import messagebox
 from archiveWriter import ArchiveWriter
-""" 
-    Resizing when an outcomesCanvas is removed/grid-ed is ANNOYING!
-    
-    Sizing issue where the checkboxes and text were off screen to the left appears to be because the canvas or frame 
-    defaults to showing the view at the right-most point.
-"""
 
 
 class UI(object):
@@ -28,12 +22,7 @@ class UI(object):
         self.buildSubmitButton()
         self.buildSelectFileButton()
 
-
-        #self.root.grid_columnconfigure(0, weight=1)
-        #self.root.grid_rowconfigure(0, weight=1)
         self.root.state('zoomed') # makes fullscreen
-        #self.root.attributes("-fullscreen", True)
-
         self.root.mainloop()
 
     def buildMasterBox(self):
@@ -47,8 +36,6 @@ class UI(object):
         masterBox.bind("<Double-1>", self.toggleBoxes)
         self.masterBox = masterBox
 
-        return
-
     def buildProgramLBoxes(self):
 
         for programGroup in self.programGroupData:
@@ -57,8 +44,6 @@ class UI(object):
             self.programBoxes.append(tempBox)
             self.activeSecondary = self.programBoxes[0]
             self.activeSecondary.turnOn()
-
-        return
 
     def buildSubmitButton(self):
 
