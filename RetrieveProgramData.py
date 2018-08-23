@@ -64,7 +64,7 @@ class RetrieveProgramData(object):
         for id in programIDs:
             programGroupEntries = [entry for entry in self.pyodbcTuples if entry[0] == id]
             self.programGroups.append(ProgramGroup(programGroupEntries))
-
+        self.programGroups.sort(key=lambda x: x.programGroupTitle)
         return self.programGroups
 
 
