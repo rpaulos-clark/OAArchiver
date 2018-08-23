@@ -198,6 +198,7 @@ class ProgramBox(object):
         self.programBox.grid_remove()
         if self.activeCanvas is not None:
             self.activeCanvas.turnOff()
+            self.activeCanvas = None
 
 
 class OutcomesCanvas(object):

@@ -2,10 +2,6 @@ import pyodbc
 import time
 
 
-"""
-    Seems to work as intended at present. Should we create an Outcome object? not sure   
-"""
-
 
 class RetrieveProgramData(object):
 
@@ -83,7 +79,7 @@ class ProgramGroup(object):
 
     def buildPrograms(self):
 
-        educationalIDs = {entry[1] for entry in self.programGroupEntries}
+        educationalIDs = {entry[1] for entry in self.programGroupEntries} # Set of programIDs
 
         # Group outcomes by program
         for id in educationalIDs:

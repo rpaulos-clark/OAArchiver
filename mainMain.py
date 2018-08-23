@@ -4,6 +4,9 @@ import ui
 
 """ BUG: Outcomes are sometimes switched between AAS and CP accounting. Build program groups uses a dictionary, so
     that is a likely candidate. Upgrade to 3.7 and that will probably resolve itself
+    
+    
+    Nope. However, the correct programID is submitted, so this is likely a UI issue
 """
 
 """ Should the user be allowed to pick a year/quarter assessed? Probably, otherwise we rely upon timely filing LOL
