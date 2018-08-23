@@ -87,6 +87,7 @@ class ProgramGroup(object):
 
             if programEntries:
                 self.programs.append(Program(programEntries))
+        self.programs.sort(key=lambda x: x.fullTitle)
 
     def assessedOutcomes(self):
         """
@@ -118,7 +119,7 @@ class Program(object):
         """
         self.programEntries = programEntries # All query rows corresponding to this particular program
         self.educationalProgramID = programEntries[0][1] # EPC
-        self.FullTitle = programEntries[0][3]
+        self.fullTitle = programEntries[0][3]
         self.programOutcomes = []
         self.buildOutcomes()
 
@@ -128,6 +129,9 @@ class Program(object):
         # self.programOutcomes = {entry[4]: entry[5] for entry in self.programEntries}
 
         self.programOutcomes = [Outcome(entry[4], entry[5]) for entry in self.programEntries]
+        self.programOutcomes.sort(key=lambda x: x.outcomeDescription)
+
+
 
     def assessedOutcomes(self):
         assessedRaw = [outcome.outcomeID for outcome in self.programOutcomes if outcome.assessed]  # All results
@@ -137,7 +141,7 @@ class Program(object):
 
     # just messing around
     def __str__(self):
-        return self.FullTitle
+        return self.fullTitle
 
 
 class Outcome(object):

@@ -11,6 +11,9 @@ import ui
     
     Looks solved. Sorting must concluded before creation of subordinate objects since we have th UI and corresponding
     objects existing in parallel. don't do that next time..
+    
+    
+    Add sorting method to RetrieveProgramData
 """
 
 """ Should the user be allowed to pick a year/quarter assessed? Probably, otherwise we rely upon timely filing LOL

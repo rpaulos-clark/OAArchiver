@@ -165,7 +165,7 @@ class ProgramBox(object):
         :return:
         """
 
-        boxValues = [program.FullTitle for program in self.programs]
+        boxValues = [program.fullTitle for program in self.programs]
         #boxValues.sort()  # Believe this to be the cause of Program/Program Canvas mismatches
         boxValues = StringVar(value=boxValues)
         box = Listbox(self.root, listvariable=boxValues, height=self.height, width=self.width)
