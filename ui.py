@@ -43,7 +43,7 @@ class UI(object):
         """
         listValues = StringVar(value=[progGroup.programGroupTitle for progGroup in self.programGroupData])
         masterBox = Listbox(self.root, listvariable=listValues, height=5, width=60)
-        masterBox.grid(column=0, row=0)
+        masterBox.grid(column=0, row=0, pady=400)  # pady prevents resize when switching prog groups
         masterBox.bind("<Double-1>", self.toggleBoxes)
         self.masterBox = masterBox
 
