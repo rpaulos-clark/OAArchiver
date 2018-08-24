@@ -1,16 +1,15 @@
 import pyodbc
 import re
-import time
-
-# @TODO: Wrap try/except clauses around the SQL database stuff in archiveFile in case of connection issues.
-# @TODO: Clean this mess up now that we figured out what the problem was
 
 class ArchiveWriter(object):
 
-    def __init__(self, filePath, assessmentData):
+    def __init__(self, filePath, assessmentData, qtrAssessed, yearAssessed):
         self.filePath = filePath
         self.fileName = self.parseFileName(filePath)
         self.assessmentData = assessmentData  # List of lists of Dicts: {ProgramID: List(outcomeIDs)
+        self.qtrAssessed = qtrAssessed
+        self.yearAssessed = yearAssessed
+
         self.archiveFile()
 
     def archiveFile(self):
@@ -31,8 +30,9 @@ class ArchiveWriter(object):
         # Load into the database
         #print(self.fileName)
         retVal = cursorProm.execute(
-            r'INSERT INTO dbo.AssessmentReports(ReportName, ReportBinary) OUTPUT inserted.ReportID values (?, ?)',
-            self.fileName, data
+            r'INSERT INTO dbo.AssessmentReports(ReportName, ReportBinary, QuarterAssessed, YearAssessed)'
+            r' OUTPUT inserted.ReportID values (?, ?, ?, ?)',
+            self.fileName, data, self.qtrAssessed, self.yearAssessed
         )
         primaryKey = retVal.fetchall()[0][0]  # ReportID
         #print(primaryKey)
@@ -42,7 +42,7 @@ class ArchiveWriter(object):
             for progDict in progGroupList:  # Sort through each program in the program group
                 for program, outcomes in progDict.items():  # Retrieve the key and the list of outcomeIDs
                     for outcome in outcomes:  # Iterate over the list of outcomeIDs
-                        print(primaryKey, program, outcome)
+                        #print(primaryKey, program, outcome)
                         cursorProm.execute(
                             r'INSERT INTO dbo.AssessmentReportsOutcomes(ReportID, EducationalProgramID, ProgramOutcomeID) '
                             r'values (?, ?, ?)', primaryKey, program, outcome

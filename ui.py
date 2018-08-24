@@ -3,16 +3,19 @@ from tkinter import filedialog
 from tkinter import ttk
 from tkinter import messagebox
 from archiveWriter import ArchiveWriter
+import datetime
 
 
 class UI(object):
 
     def __init__(self, programGroupData):
-
+        self.qtrConversion = {'Summer': 1, 'Fall': 2, 'Winter': 3, 'Spring': 4}  # for the qtrComboBox
         self.activeSecondary = None # We are electing to always have the first one active. Will be a box
         self.masterBox = None # instantated in buildMasterBox
         self.submitButton = None  #instantiated in buildSubmitButton
         self.fileButton = None  # instantiated in buildSelectFileButton
+        self.qtrBox = None # To be updated in yet-to-be written fnx
+        self.yearBox = None  # updated in yet-to-be written fnx
         self.filePath = None  # to be selected by the user
         self.programGroupData = programGroupData
         self.root = Tk()
@@ -21,6 +24,8 @@ class UI(object):
         self.buildProgramLBoxes()
         self.buildSubmitButton()
         self.buildSelectFileButton()
+        self.buildQtrComboBox()
+        self.buildYearComboBox()
 
         self.root.state('zoomed') # makes fullscreen
         self.root.mainloop()
@@ -48,13 +53,24 @@ class UI(object):
     def buildSubmitButton(self):
 
         button = Button(self.root, text='Submit Report', command=self.submit)
-        button.grid(row=1, column=0)
+        button.grid(row=2, column=0)
         self.submitButton = button
 
     def buildSelectFileButton(self):
         button = Button(self.root, text='Select File to Save', command=self.selectFile)
-        button.grid(row=1, column=1)
+        button.grid(row=2, column=1)
         self.fileButton = button
+
+    def buildQtrComboBox(self):
+        cbox = ttk.Combobox(self.root, values=[*self.qtrConversion.keys()])
+        cbox.grid(row=1, column=0)
+        self.qtrBox = cbox
+
+    def buildYearComboBox(self):
+        now = datetime.datetime.now()  # We first need a datetime object for reference
+        cbox = ttk.Combobox(self.root, values=[*range(now.year-30, now.year+1)])
+        cbox.grid(row=1, column=1)
+        self.yearBox = cbox
 
     def toggleBoxes(self, *args):
         """
@@ -77,25 +93,40 @@ class UI(object):
             the write to the database.
             :return:
         """
-        if self.filePath is None:
+        if self.filePath is None:  # user has not selected a file to submit
             messagebox.showinfo(message="You must select a file to submit", icon='error')
             return
 
         assessmentData = self.assessedCensus()
-        if not assessmentData:
+        if not assessmentData:  # User has no selected any program outcomes
             messagebox.showinfo(message="You must select at least one assessed program outcome")
             return
 
+        # Here we will check the qtr and year combo boxes for entries
+        if self.qtrBox.get() == '':
+            messagebox.showinfo(message="You must select the quarter this assessment was made")
+            return
+        if self.yearBox.get() == '':
+            messagebox.showinfo(message="You must select the year this assessment was made")
+            return
+
+        qtrAssessed = self.qtrConversion[self.qtrBox.get()] # Load the qtr data from the conversion dictionary
+        yearAssessed = self.yearBox.get()
+
         try:
-            ArchiveWriter(self.filePath, assessmentData)
+            ArchiveWriter(self.filePath, assessmentData, qtrAssessed, yearAssessed)
         except AssertionError:
             messagebox.showinfo(message="Error parsing file name. Try again with a different file name")
-
+            return
         except Exception as e:
             messagebox.showinfo(message="Encountered {}\n Please exit the program and try again".format(e))
+            return
 
-        # If we make it here we need to create a dialog box confirming submission and then reset program state
+        # All good.
         messagebox.showinfo(message="Submission Successful!")
+
+
+        # Now we need to reset program state. destroy root and put main in an infinite loop?
 
     def assessedCensus(self):
         """
