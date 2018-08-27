@@ -141,6 +141,8 @@ class UI(object):
 
 
         # Now we need to reset program state. destroy root and put main in an infinite loop?
+        self.root.destroy()
+        self.__init__(self.programGroupData)
 
     def assessedCensus(self):
         """
@@ -169,6 +171,33 @@ class UI(object):
             return
         self.supportFilePath = tempPath
 
+
+    def resetGUI(self):
+        widgetList = self.root.winfo_children()
+        for widget in widgetList:
+            widget.grid.forget()
+
+
+        # Reset fields to their default
+        self.activeSecondary = None  # We are electing to always have the first one active. Will be a box
+        self.masterBox = None  # instantated in buildMasterBox
+        self.submitButton = None  # instantiated in buildSubmitButton
+        self.fileButton = None  # instantiated in buildSelectFileButton
+        self.supportFilebutton = None  # instantiated in resptive method
+        self.qtrBox = None  # To be updated in yet-to-be written fnx
+        self.yearBox = None  # updated in yet-to-be written fnx
+        self.filePath = None  # to be selected by the user
+        self.supportFilePath = None  # May or may not be updated in respective method
+
+        # Rebuild the GUI elements
+        self.buildMasterBox()
+        self.programBoxes = []
+        self.buildProgramLBoxes()
+        self.buildSubmitButton()
+        self.buildSupportingFilesButton()
+        self.buildSelectFileButton()
+        self.buildQtrComboBox()
+        self.buildYearComboBox()
 
 
 class ProgramBox(object):
