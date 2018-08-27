@@ -22,35 +22,35 @@ connProm = pyodbc.connect(
 )
 cursorProm = connProm.cursor()
 
+# #
+# with open ("C:/testFolder/SLP Code.zip", 'rb') as byteFile:
+#     data = byteFile.read()
+#     print(type(data))
 #
-with open ("C:/testFolder/(BTEC).pdf", 'rb') as byteFile:
-    data = byteFile.read()
-    print(type(data))
+# #
+# pk = cursorProm.execute(
+#     r"INSERT INTO dbo.testTable values (?, ?, ?)", data, 'SLP Code.zip', 'summer'
+# )
 
-#
-pk = cursorProm.execute(
-    r"INSERT INTO dbo.OutcomesAssessmentReportText OUTPUT inserted.ReportID values (?, ?)", 'BTEC', data
-)
-
-ret = pk.fetchall()
-reportID = ret[0][0]
-print(reportID)
-test = connProm.commit()
+#ret = pk.fetchall()
+#reportID = ret[0][0]
+#print(reportID)
+# test = connProm.commit()
 
 #Works through here to write the file into the SQL database. Can we retrieve it and recreate the file now?
 
 file = cursorProm.execute(
-    r'SELECT ReportBinary '
-    r'FROM IRKanna.dbo.OutcomesAssessmentReportText '
-    r"WHERE ReportID = ?", '60'
+    r'SELECT TestCol1 '
+    r'FROM IRKanna.dbo.testTable '
+    r"WHERE fileName = ?", 'SLP Code.zip'
 
 )
 
 bytesStream = file.fetchone()
-print(type(bytesStream.ReportBinary))
+print(type(bytesStream.TestCol1))
 
-with open("C:/testFolder/testFile.pdf", 'wb') as newFile:
-    newFile.write(bytesStream.ReportBinary)
+with open("C:/testFolder/fetchedSLP Code.zip", 'wb') as newFile:
+    newFile.write(bytesStream.TestCol1)
 
 # I believe this all works. woot
 

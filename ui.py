@@ -14,18 +14,22 @@ class UI(object):
         self.masterBox = None # instantated in buildMasterBox
         self.submitButton = None  #instantiated in buildSubmitButton
         self.fileButton = None  # instantiated in buildSelectFileButton
+        self.supportFilebutton = None  # instantiated in resptive method
         self.qtrBox = None # To be updated in yet-to-be written fnx
         self.yearBox = None  # updated in yet-to-be written fnx
         self.filePath = None  # to be selected by the user
+        self.supportFilePath = None  # May or may not be updated in respective method
         self.programGroupData = programGroupData
         self.root = Tk()
         self.buildMasterBox()
         self.programBoxes = []
         self.buildProgramLBoxes()
         self.buildSubmitButton()
+        self.buildSupportingFilesButton()
         self.buildSelectFileButton()
         self.buildQtrComboBox()
         self.buildYearComboBox()
+
 
         self.root.state('zoomed') # makes fullscreen
         self.root.mainloop()
@@ -64,13 +68,23 @@ class UI(object):
     def buildQtrComboBox(self):
         cbox = ttk.Combobox(self.root, values=[*self.qtrConversion.keys()])
         cbox.grid(row=1, column=0)
+        cbox.current(0)
         self.qtrBox = cbox
 
     def buildYearComboBox(self):
         now = datetime.datetime.now()  # We first need a datetime object for reference
-        cbox = ttk.Combobox(self.root, values=[*range(now.year-30, now.year+1)])
+        yearRange = [*range(now.year-30, now.year+1)]  # Create the year range available for report submissions
+        yearRange.reverse()  # We wan the list to be descending from present, not ascending from earliest possible
+        cbox = ttk.Combobox(self.root, values=yearRange)
+        cbox.current(0)  # Default to current year
         cbox.grid(row=1, column=1)
         self.yearBox = cbox
+
+    def buildSupportingFilesButton(self):
+        button = Button(self.root, text="Select a Supporting Document", command=self.selectSupportFile)
+        button.grid(row=3, column=1)
+        self.supportFilebutton = button
+
 
     def toggleBoxes(self, *args):
         """
@@ -114,7 +128,7 @@ class UI(object):
         yearAssessed = self.yearBox.get()
 
         try:
-            ArchiveWriter(self.filePath, assessmentData, qtrAssessed, yearAssessed)
+            ArchiveWriter(self.filePath, assessmentData, qtrAssessed, yearAssessed, self.supportFilePath)
         except AssertionError:
             messagebox.showinfo(message="Error parsing file name. Try again with a different file name")
             return
@@ -147,7 +161,14 @@ class UI(object):
             messagebox.showinfo(message="Invalid file format; file must be PDF format", icon='error')
         else:
             self.filePath = tempPath
-        return
+
+    # Receives filepath for supporting document submission. Multiple files must be in a .zip
+    def selectSupportFile(self):
+        tempPath = filedialog.askopenfilename()
+        if tempPath == '':
+            return
+        self.supportFilePath = tempPath
+
 
 
 class ProgramBox(object):
