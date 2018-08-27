@@ -41,7 +41,7 @@ class UI(object):
         """
         listValues = StringVar(value=[progGroup.programGroupTitle for progGroup in self.programGroupData])
         masterBox = Listbox(self.root, listvariable=listValues, height=5, width=60)
-        masterBox.grid(column=0, row=0, pady=400)  # pady prevents resize when switching prog groups
+        masterBox.grid(column=0, row=0, pady=(400, 0))  # pady prevents resize when switching prog groups
         masterBox.bind("<Double-1>", self.toggleBoxes)
         self.masterBox = masterBox
 
@@ -234,7 +234,7 @@ class ProgramBox(object):
         boxValues = StringVar(value=boxValues)
         box = Listbox(self.root, listvariable=boxValues, height=self.height, width=self.width)
         box.bind("<Double-1>", self.toggleCanvases)
-        box.grid(column=1, row=0)
+        box.grid(column=1, row=0, pady=(400, 0))
         box.grid_remove()
         self.programBox = box
 
@@ -279,13 +279,13 @@ class OutcomesCanvas(object):
 
     def buildSelf(self):
         # Construct master canvas
-        canvas = Canvas(self.root, width=600, height=600)
-        canvas.grid(column=2, row=0, padx=20)
+        canvas = Canvas(self.root, width=600, height=400)
+        canvas.grid(column=2, row=0, padx=20, pady=(400, 0))
         canvas.grid_remove()
 
         # Add vertical scrollbar
         vBar = ttk.Scrollbar(self.root, orient=VERTICAL, command=canvas.yview)
-        vBar.grid(column=3, row=0, sticky=(N, S))  # maybe take out sticky
+        vBar.grid(column=3, row=0, sticky=(N, S), pady=(400, 0))  # maybe take out sticky
         canvas.configure(yscrollcommand=vBar.set)
         vBar.grid_remove()
 
@@ -295,12 +295,10 @@ class OutcomesCanvas(object):
         canvas.configure(xscrollcommand=hBar.set)
         hBar.grid_remove()
 
-
         # Add frame
         frame = ttk.Frame(canvas)
         canvas.create_window((20, 20), window=frame)  # Hang the frame
         frame.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas))  # accommodate new widgets
-        #canvas.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas)) ## Test. This is likely unnecessary, was trying to figure out why the text was off.
 
         self.canvas = canvas
         self.frame = frame
