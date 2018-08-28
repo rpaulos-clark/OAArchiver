@@ -1,15 +1,16 @@
+# Ryan Paulos
+# Clark College
+
 import pyodbc
 import time
 
 
-
 class RetrieveProgramData(object):
-
     def __init__(self):
 
         self.pyodbcTuples = []
         self.programGroups = []
-        self.pullData() # Updates pyodbcRows with data
+        self.pullData()  # Updates pyodbcRows with data
 
     def pullData(self):
 
@@ -40,13 +41,13 @@ class RetrieveProgramData(object):
                 order by pg.ProgramGroupID, pg.EducationalProgramID
             
             """
-            )
+                               )
         except:
             print("Error connecting to SQL Server...terminating")
             time.sleep(10)
             exit(1)
 
-        pyodbcRows = cursorProm.fetchall() # program will have exited if that isn't instantiated
+        pyodbcRows = cursorProm.fetchall()  # program will have exited if that isn't instantiated
         for row in pyodbcRows:
             self.pyodbcTuples.append(tuple(row))
         return
@@ -58,7 +59,7 @@ class RetrieveProgramData(object):
             Here we must determine how to separate the different program groups and create their respective objects
         """
 
-        programIDs = {row[0] for row in self.pyodbcTuples} #  ProgramGroupID set
+        programIDs = {row[0] for row in self.pyodbcTuples}  # ProgramGroupID set
 
         # separate and group all entries by ProgramGroupID, then use the groups to create the programs
         for id in programIDs:
@@ -69,17 +70,16 @@ class RetrieveProgramData(object):
 
 
 class ProgramGroup(object):
-
     def __init__(self, programGroupEntries):
         self.programGroupTitle = programGroupEntries[0][2]
         self.programGroupID = programGroupEntries[0][0]
-        self.programs = [] # Holds finished program objects
-        self.programGroupEntries = programGroupEntries # Holds raw query rows
+        self.programs = []  # Holds finished program objects
+        self.programGroupEntries = programGroupEntries  # Holds raw query rows
         self.buildPrograms()
 
     def buildPrograms(self):
 
-        educationalIDs = {entry[1] for entry in self.programGroupEntries} # Set of programIDs
+        educationalIDs = {entry[1] for entry in self.programGroupEntries}  # Set of programIDs
 
         # Group outcomes by program
         for id in educationalIDs:
@@ -110,20 +110,18 @@ class ProgramGroup(object):
 
 
 class Program(object):
-
     def __init__(self, programEntries):
         """
 
         :param programEntries: A list of all query entries corresponding to ONE program (i.e. all program outcomes)
         """
-        self.programEntries = programEntries # All query rows corresponding to this particular program
-        self.educationalProgramID = programEntries[0][1] # EPC
+        self.programEntries = programEntries  # All query rows corresponding to this particular program
+        self.educationalProgramID = programEntries[0][1]  # EPC
         self.fullTitle = programEntries[0][3]
         self.programOutcomes = []
         self.buildOutcomes()
 
     def buildOutcomes(self):
-
         self.programOutcomes = [Outcome(entry[4], entry[5]) for entry in self.programEntries]
         self.programOutcomes.sort(key=lambda x: x.outcomeDescription)
 
@@ -139,9 +137,7 @@ class Program(object):
 
 
 class Outcome(object):
-
     def __init__(self, outcomeID, outcomeDescription):
         self.outcomeID = outcomeID
         self.outcomeDescription = outcomeDescription
-        self.assessed = False # To be toggled by the checkbox UI
-
+        self.assessed = False  # To be toggled by the checkbox UI

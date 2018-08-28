@@ -1,8 +1,11 @@
+# Ryan Paulos
+# Clark College
+
 import pyodbc
 import re
 
-class ArchiveWriter(object):
 
+class ArchiveWriter(object):
     def __init__(self, filePath, assessmentData, qtrAssessed, yearAssessed, supportFilePath):
         self.filePath = filePath
         self.fileName = self.parseFileName(filePath)
@@ -32,17 +35,16 @@ class ArchiveWriter(object):
         # Load supporting documents. Returns None if no supporting document was passed
         supportFileBytes = self.loadSupportFile()
 
-
         # Load into the database
-        #print(self.fileName)
+        # print(self.fileName)
         retVal = cursorProm.execute(
             r'INSERT INTO dbo.AssessmentReports'
-            r'(ReportName, ReportBinary, QuarterAssessed, YearAssessed, SupportingDocuments, SupportingDocumentsName)'
+            r'(ReportName, ReportBinary, QuarterAssessed, YearAssessed, SupportingDocuments)'
             r' OUTPUT inserted.ReportID values (?, ?, ?, ?, ?, ?)',
             self.fileName, reportFileBytes, self.qtrAssessed, self.yearAssessed, supportFileBytes, self.supportFileName
         )
         primaryKey = retVal.fetchall()[0][0]  # ReportID
-        #print(primaryKey)
+        # print(primaryKey)
 
         # Deal with the support File
 
@@ -52,13 +54,12 @@ class ArchiveWriter(object):
             for progDict in progGroupList:  # Sort through each program in the program group
                 for program, outcomes in progDict.items():  # Retrieve the key and the list of outcomeIDs
                     for outcome in outcomes:  # Iterate over the list of outcomeIDs
-                        #print(primaryKey, program, outcome)
+                        # print(primaryKey, program, outcome)
                         cursorProm.execute(
                             r'INSERT INTO dbo.AssessmentReportsOutcomes(ReportID, EducationalProgramID, ProgramOutcomeID) '
                             r'values (?, ?, ?)', primaryKey, program, outcome
                         )
         connProm.commit()
-
 
         # Logs that we have successfully uploaded all relevant data.
         cursorProm.execute(
@@ -95,5 +96,3 @@ class ArchiveWriter(object):
             fileName = matchedRE.group()
         assert fileName is not None, "Failed to parse file name"
         return fileName
-
-

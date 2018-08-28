@@ -1,3 +1,6 @@
+# Ryan Paulos
+# Clark College
+
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
@@ -7,15 +10,14 @@ import datetime
 
 
 class UI(object):
-
     def __init__(self, programGroupData):
         self.qtrConversion = {'Summer': 1, 'Fall': 2, 'Winter': 3, 'Spring': 4}  # for the qtrComboBox
-        self.activeSecondary = None # We are electing to always have the first one active. Will be a box
-        self.masterBox = None # instantated in buildMasterBox
-        self.submitButton = None  #instantiated in buildSubmitButton
+        self.activeSecondary = None  # We are electing to always have the first one active. Will be a box
+        self.masterBox = None  # instantated in buildMasterBox
+        self.submitButton = None  # instantiated in buildSubmitButton
         self.fileButton = None  # instantiated in buildSelectFileButton
         self.supportFilebutton = None  # instantiated in resptive method
-        self.qtrBox = None # To be updated in yet-to-be written fnx
+        self.qtrBox = None  # To be updated in yet-to-be written fnx
         self.yearBox = None  # updated in yet-to-be written fnx
         self.filePath = None  # to be selected by the user
         self.supportFilePath = None  # May or may not be updated in respective method
@@ -30,14 +32,13 @@ class UI(object):
         self.buildQtrComboBox()
         self.buildYearComboBox()
 
-
-        self.root.state('zoomed') # makes fullscreen
+        self.root.state('zoomed')  # makes fullscreen
         self.root.mainloop()
 
     def buildMasterBox(self):
         """
-            Instantiate masterBox and populate with program group titles.
-        :return:
+            Instantiate masterBox and populate with program group titles. Each program Group has a corresponding
+            programLBox object
         """
         listValues = StringVar(value=[progGroup.programGroupTitle for progGroup in self.programGroupData])
         masterBox = Listbox(self.root, listvariable=listValues, height=5, width=60)
@@ -46,9 +47,13 @@ class UI(object):
         self.masterBox = masterBox
 
     def buildProgramLBoxes(self):
+        """
+            Each entry in the master box has a corresponding programLBox. Each entry in each programLBox in turn has
+            a corresponding canvas for displaying the selected program's outcomes
+        """
 
         for programGroup in self.programGroupData:
-            programs = programGroup.listPrograms() # Retrieves all program objects
+            programs = programGroup.listPrograms()  # Retrieves all program objects
             tempBox = ProgramBox(programs, self.root, 5, width=60)
             self.programBoxes.append(tempBox)
             self.activeSecondary = self.programBoxes[0]
@@ -66,14 +71,20 @@ class UI(object):
         self.fileButton = button
 
     def buildQtrComboBox(self):
+        """
+            Used for selecting the quarter of the assessment report. Relies upon a conversion dict.
+        """
         cbox = ttk.Combobox(self.root, values=[*self.qtrConversion.keys()])
         cbox.grid(row=1, column=0)
         cbox.current(0)
         self.qtrBox = cbox
 
     def buildYearComboBox(self):
+        """
+            Used for selecting the year of the assessment report
+        """
         now = datetime.datetime.now()  # We first need a datetime object for reference
-        yearRange = [*range(now.year-30, now.year+1)]  # Create the year range available for report submissions
+        yearRange = [*range(now.year - 30, now.year + 1)]  # Create the year range available for report submissions
         yearRange.reverse()  # We wan the list to be descending from present, not ascending from earliest possible
         cbox = ttk.Combobox(self.root, values=yearRange)
         cbox.current(0)  # Default to current year
@@ -84,7 +95,6 @@ class UI(object):
         button = Button(self.root, text="Select a Supporting Document", command=self.selectSupportFile)
         button.grid(row=3, column=1)
         self.supportFilebutton = button
-
 
     def toggleBoxes(self, *args):
         """
@@ -124,7 +134,7 @@ class UI(object):
             messagebox.showinfo(message="You must select the year this assessment was made")
             return
 
-        qtrAssessed = self.qtrConversion[self.qtrBox.get()] # Load the qtr data from the conversion dictionary
+        qtrAssessed = self.qtrConversion[self.qtrBox.get()]  # Load the qtr data from the conversion dictionary
         yearAssessed = self.yearBox.get()
 
         try:
@@ -139,7 +149,6 @@ class UI(object):
         # All good.
         messagebox.showinfo(message="Submission Successful!")
 
-
         # Now we need to reset program state. destroy root and put main in an infinite loop?
         self.root.destroy()
         self.__init__(self.programGroupData)
@@ -148,7 +157,7 @@ class UI(object):
         """
             This method will be responsible for querying the programs for assessment information
             Call upon each ProgramBox to provide a list and join them together
-        :return: A list of dictionaries: {EducationalProgramID: ProgramOutcomeID}
+        :return: A list of lists(ProgramGroups) of dictionaries(programs) containing the assessed outcomes
         """
         finalRaw = [progGroup.assessedOutcomes() for progGroup in self.programGroupData]
         final = [outcome for outcome in finalRaw if outcome is not None]
@@ -156,7 +165,7 @@ class UI(object):
 
     # Receives filepath and ensures valid document type
     def selectFile(self):
-        tempPath  = filedialog.askopenfilename()
+        tempPath = filedialog.askopenfilename()
         if tempPath == '':  # User pressed cancel
             return
         if tempPath[-4:] != '.pdf':
@@ -171,12 +180,11 @@ class UI(object):
             return
         self.supportFilePath = tempPath
 
-
+    # Hacky way to reset the GUI: Just delete everything and initialize it!
     def resetGUI(self):
         widgetList = self.root.winfo_children()
         for widget in widgetList:
             widget.grid.forget()
-
 
         # Reset fields to their default
         self.activeSecondary = None  # We are electing to always have the first one active. Will be a box
@@ -201,7 +209,6 @@ class UI(object):
 
 
 class ProgramBox(object):
-
     def __init__(self, programs, master, height, width):
         """
             Box defaults to removed status
@@ -230,7 +237,7 @@ class ProgramBox(object):
         """
 
         boxValues = [program.fullTitle for program in self.programs]
-        #boxValues.sort()  # Believe this to be the cause of Program/Program Canvas mismatches
+        # boxValues.sort()  # Believe this to be the cause of Program/Program Canvas mismatches
         boxValues = StringVar(value=boxValues)
         box = Listbox(self.root, listvariable=boxValues, height=self.height, width=self.width)
         box.bind("<Double-1>", self.toggleCanvases)
@@ -266,7 +273,6 @@ class ProgramBox(object):
 
 
 class OutcomesCanvas(object):
-
     def __init__(self, master, programOutcomes):
         self.root = master
         self.outcomes = programOutcomes  # Looks like this will be a dict of outcomeID:Description
@@ -330,7 +336,6 @@ class OutcomesCanvas(object):
 
 # Accepts an outcome object to populate the UI portion and for communicating the toggle states
 class OutcomeButton(object):
-
     def __init__(self, master, outcome, row):
         self.master = master
         self.outcome = outcome

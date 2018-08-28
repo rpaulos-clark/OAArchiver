@@ -1,3 +1,6 @@
+# Ryan Paulos
+# Clark College
+
 import RetrieveProgramData as rpd
 import ui
 
@@ -8,5 +11,5 @@ import ui
 """
 
 builder = rpd.RetrieveProgramData()  # Pulls data from database. Loads into respective objects
-programGroupData = builder.buildProgramGroups()
+programGroupData = builder.buildProgramGroups()  # Loads data into relevant objects
 ui.UI(programGroupData)
