@@ -44,10 +44,6 @@ class ArchiveWriter(object):
             self.fileName, reportFileBytes, self.qtrAssessed, self.yearAssessed, supportFileBytes, self.supportFileName
         )
         primaryKey = retVal.fetchall()[0][0]  # ReportID
-        # print(primaryKey)
-
-        # Deal with the support File
-
 
         # Now we upload the outcomes data
         for progGroupList in self.assessmentData:  # assessmentData contains lists organized by program group

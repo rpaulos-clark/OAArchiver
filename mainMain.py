@@ -1,6 +1,12 @@
 # Ryan Paulos
 # Clark College
 
+"""
+    Ideally the information requested from SQL would be done utilizing a stored procedure to protect against data
+    location/structure change.
+"""
+
+
 import RetrieveProgramData as rpd
 import ui
 

@@ -185,7 +185,6 @@ class UI(object):
 
     # Reset program input variables to blank slate
     def reset(self):
-
         # We first reset the check boxes to be unselected
         for progBox in self.programBoxes:
             progBox.resetOutcomeButtons()
