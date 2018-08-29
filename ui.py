@@ -152,7 +152,9 @@ class UI(object):
         # Now we need to reset program state. destroy root and put main in an infinite loop?
         #self.root.destroy()
         #self.__init__(self.programGroupData)
-        self.resetGUI()
+
+        #self.resetGUI()  # We are going to see if the resetOutcomeButtons work best!
+        self.reset()
 
     def assessedCensus(self):
         """
@@ -181,36 +183,51 @@ class UI(object):
             return
         self.supportFilePath = tempPath
 
-    # Hacky way to reset the GUI: Just delete everything and initialize it!
-    def resetGUI(self):
-        widgetList = self.root.winfo_children()
-        for widget in widgetList:
-            widget.grid_forget()
+    # Reset program input variables to blank slate
+    def reset(self):
 
-        # Now we must reset the state of the outcomes
+        # We first reset the check boxes to be unselected
+        for progBox in self.programBoxes:
+            progBox.resetOutcomeButtons()
+
+        # Now we reset the state of the outcome objects the buttons are tied to
         for progGroup in self.programGroupData:
             progGroup.resetOutcomes()
 
-        # Reset fields to their default
-        self.activeSecondary = None  # We are electing to always have the first one active. Will be a box
-        self.masterBox = None  # instantated in buildMasterBox
-        self.submitButton = None  # instantiated in buildSubmitButton
-        self.fileButton = None  # instantiated in buildSelectFileButton
-        self.supportFilebutton = None  # instantiated in resptive method
-        self.qtrBox = None  # To be updated in yet-to-be written fnx
-        self.yearBox = None  # updated in yet-to-be written fnx
+        # Now we reset the user-entered values to their default
         self.filePath = None  # to be selected by the user
         self.supportFilePath = None  # May or may not be updated in respective method
 
-        # Rebuild the GUI elements
-        self.buildMasterBox()
-        self.programBoxes = []
-        self.buildProgramLBoxes()
-        self.buildSubmitButton()
-        self.buildSupportingFilesButton()
-        self.buildSelectFileButton()
-        self.buildQtrComboBox()
-        self.buildYearComboBox()
+    # Hacky way to reset the GUI: Just delete everything and initialize it!
+    # def resetGUI(self):
+    #     widgetList = self.root.winfo_children()
+    #     for widget in widgetList:
+    #         widget.grid_forget()
+    #
+    #
+    #     for progGroup in self.programGroupData:
+    #         progGroup.resetOutcomes()
+    #
+    #     # Reset fields to their default
+    #     self.activeSecondary = None  # We are electing to always have the first one active. Will be a box
+    #     self.masterBox = None  # instantated in buildMasterBox
+    #     self.submitButton = None  # instantiated in buildSubmitButton
+    #     self.fileButton = None  # instantiated in buildSelectFileButton
+    #     self.supportFilebutton = None  # instantiated in resptive method
+    #     self.qtrBox = None  # To be updated in yet-to-be written fnx
+    #     self.yearBox = None  # updated in yet-to-be written fnx
+    #     self.filePath = None  # to be selected by the user
+    #     self.supportFilePath = None  # May or may not be updated in respective method
+    #
+    #     # Rebuild the GUI elements
+    #     self.buildMasterBox()
+    #     self.programBoxes = []
+    #     self.buildProgramLBoxes()
+    #     self.buildSubmitButton()
+    #     self.buildSupportingFilesButton()
+    #     self.buildSelectFileButton()
+    #     self.buildQtrComboBox()
+    #     self.buildYearComboBox()
 
 
 class ProgramBox(object):
@@ -255,7 +272,7 @@ class ProgramBox(object):
 
     def toggleCanvases(self, *args):
 
-        i = self.programBox.curselection()[0]
+        i = self.programBox.curselection()[0]  # grab index of currently selected program
 
         if self.activeCanvas is None:  # Account for blank canvas
             self.activeCanvas = self.outcomeCanvases[i]
@@ -276,6 +293,10 @@ class ProgramBox(object):
             self.activeCanvas.turnOff()
             self.activeCanvas = None
 
+    # Reset checkbox values to 0 (unchecked)
+    def resetOutcomeButtons(self):
+        for canvas in self.outcomeCanvases:
+            canvas.resetOutcomeButtons()
 
 class OutcomesCanvas(object):
     def __init__(self, master, programOutcomes):
@@ -335,6 +356,14 @@ class OutcomesCanvas(object):
         self.vBar.grid_remove()
         self.hBar.grid_remove()
 
+    # Put the outcome button values as 0 (uncheck the boxes)
+    def resetOutcomeButtons(self):
+
+        outcomeButtons = self.frame.grid_slaves()
+        for checkbutton in outcomeButtons:
+            checkbutton.deselect()
+
+
     def onFrameConfigure(self, canvas):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
@@ -360,3 +389,4 @@ class OutcomeButton(object):
             self.outcome.assessed = False
         else:
             self.outcome.assessed = True
+
