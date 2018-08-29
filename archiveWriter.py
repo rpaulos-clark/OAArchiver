@@ -39,7 +39,7 @@ class ArchiveWriter(object):
         # print(self.fileName)
         retVal = cursorProm.execute(
             r'INSERT INTO dbo.AssessmentReports'
-            r'(ReportName, ReportBinary, QuarterAssessed, YearAssessed, SupportingDocuments)'
+            r'(ReportName, ReportBinary, QuarterAssessed, YearAssessed, SupportingDocuments, SupportingDocumentsName)'
             r' OUTPUT inserted.ReportID values (?, ?, ?, ?, ?, ?)',
             self.fileName, reportFileBytes, self.qtrAssessed, self.yearAssessed, supportFileBytes, self.supportFileName
         )

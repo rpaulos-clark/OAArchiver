@@ -102,6 +102,10 @@ class ProgramGroup(object):
     def listPrograms(self):
         return [program for program in self.programs]
 
+    def resetOutcomes(self):
+        for program in self.programs:
+            program.resetOutcomes()
+
     # Just messing around
     def printPrograms(self):
         for program in self.programs:
@@ -131,6 +135,10 @@ class Program(object):
         if assessed:
             return {self.educationalProgramID: assessed}
 
+    def resetOutcomes(self):
+        for programOutcomes in self.programOutcomes:
+            programOutcomes.reset()
+
     # just messing around
     def __str__(self):
         return self.fullTitle
@@ -141,3 +149,6 @@ class Outcome(object):
         self.outcomeID = outcomeID
         self.outcomeDescription = outcomeDescription
         self.assessed = False  # To be toggled by the checkbox UI
+
+    def reset(self):
+        self.assessed = False

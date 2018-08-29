@@ -150,8 +150,9 @@ class UI(object):
         messagebox.showinfo(message="Submission Successful!")
 
         # Now we need to reset program state. destroy root and put main in an infinite loop?
-        self.root.destroy()
-        self.__init__(self.programGroupData)
+        #self.root.destroy()
+        #self.__init__(self.programGroupData)
+        self.resetGUI()
 
     def assessedCensus(self):
         """
@@ -184,7 +185,11 @@ class UI(object):
     def resetGUI(self):
         widgetList = self.root.winfo_children()
         for widget in widgetList:
-            widget.grid.forget()
+            widget.grid_forget()
+
+        # Now we must reset the state of the outcomes
+        for progGroup in self.programGroupData:
+            progGroup.resetOutcomes()
 
         # Reset fields to their default
         self.activeSecondary = None  # We are electing to always have the first one active. Will be a box
